@@ -11,9 +11,7 @@ describe('Greeting-App function', function () {
         setFact.storedNames('jesse')
         setFact.storedNames('jason')
 
-        assert.deepEqual([ { allNames: 'ODWA' },
-        { allNames: 'JESSE' },
-        { allNames: 'JASON' } ], setFact.nameList());
+        assert.deepEqual(['odwa','jesse','jason'], setFact.storeAllName());
     });
 
 

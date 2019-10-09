@@ -22,14 +22,17 @@ module.exports = function greetings(storeNames) {
         }
         return true
     }
+
     function count() {
         var myKey = Object.keys(namesGreeted)
         counter = myKey.length
         return counter
     }
+
     function output() {
         return namesGreeted
     }
+
     function greetName(language) {
         var languageType = language
         var English = 'Hello '
@@ -53,6 +56,7 @@ module.exports = function greetings(storeNames) {
         }
         return result;
     }
+    
     function storedNames(names) {
         myNames = names
         var myTest = regex.test(myNames)
