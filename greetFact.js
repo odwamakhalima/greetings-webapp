@@ -7,29 +7,29 @@ module.exports = function greetings(storeNames) {
     var check = false
     var result;
     var list = []
+    var newList = []
+    var errorM = ''
+    var countr = 0;
 
     function addNames(type) {
-
-        var myTest = regex.test(myNames)
-        console.log(myTest)
+        var myTest = regex.test(type)
         if (myTest === false || type === '') {
             myNames = type.trim();
             myNames = myNames.toUpperCase()
-            return true
         }
+        else {
+            errorM = 'Not A Valid Name Try Again'
+        }
+        return true
     }
-
     function count() {
         var myKey = Object.keys(namesGreeted)
         counter = myKey.length
-        console.log(myKey)
         return counter
     }
-
     function output() {
         return namesGreeted
     }
-
     function greetName(language) {
         var languageType = language
         var English = 'Hello '
@@ -38,23 +38,26 @@ module.exports = function greetings(storeNames) {
         var myTest = regex.test(myNames)
 
         if (myTest === false) {
-        if (languageType === 'Xhosa') {
-            result = Xhosa + myNames
+            if (languageType === 'Xhosa') {
+                result = Xhosa + myNames
+            }
+            else if (languageType === 'English') {
+                result = English + myNames
+            }
+            else if (languageType === 'Afrikaans') {
+                result = Afrikaans + myNames
+            }
         }
-        if (languageType === 'English') {
-            result = English + myNames
+        else {
+            errorM = 'Please Select A Language'
         }
-        if (languageType === 'Afrikaans') {
-            result = Afrikaans + myNames
-        }
-    }
         return result;
     }
     function storedNames(names) {
-
         myNames = names
         var myTest = regex.test(myNames)
         if (myTest === false) {
+            newList.push(myNames)
             if (myNames.trim()) {
                 if (addNames(myNames)) {
                     var allData = []
@@ -68,9 +71,6 @@ module.exports = function greetings(storeNames) {
                         if (namesGreeted[myNames] === undefined) {
                             namesGreeted[myNames] = 0;
                             count()
-                            list.push({
-                                allNames:myNames
-                            })
                         }
                     }
                 }
@@ -78,7 +78,7 @@ module.exports = function greetings(storeNames) {
         }
     }
 
-    function nameList(){
+    function nameList() {
         return list
     }
 
@@ -91,6 +91,26 @@ module.exports = function greetings(storeNames) {
         show = greetName(input);
         return show
     }
+
+    function errors() {
+        return errorM
+    }
+
+    function storeAllName() {
+        return newList
+    }
+
+
+    function getCount(newList, value) {
+        console.log(newList)
+        countr = 0;
+        newList.forEach((v) => (v === value && countr++));
+        list.push({
+            allNames: myNames,
+            counts: countr
+        })
+        return countr;
+    }
     return {
         addNames,
         storedNames,
@@ -98,7 +118,9 @@ module.exports = function greetings(storeNames) {
         count,
         displayer,
         output,
-        nameList
-
+        nameList,
+        errors,
+        storeAllName,
+        getCount
     }
 }

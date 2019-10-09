@@ -4,13 +4,30 @@ var express = require('express')
 var app = express()
 var bodyParser = require('body-parser')
 
-var greetings = require('./greetFact')
-const setFact = greetings()
 
+const pg = require('pg');
+const Pool = pg.Pool;
+
+
+
+var greetings = require('./greetFact')
+var routings = require('./greet-route')
+
+const setFact = greetings()
+const routingFact = routings(setFact)
 const exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
+
+app.use(session({
+    secret : 'this is my long string that is used for session in http',
+    resave: false,
+    saveUninitialized: true
+  }));
+
+  // initialise the flash middleware
+  app.use(flash());
 
 app.use(express.static('public'))
 
@@ -20,31 +37,16 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.get('/', function (req, res) {
-    res.render('index', {
-        counting: setFact.count(),
-        greet: setFact.displayer(req.body.langItemType)
-    })
-})
-
-app.post('/greet', function (req, res) {
-
-    setFact.storedNames(req.body.namesUpdate);
-    setFact.greetName(req.body.langItemType)
-  
-
-    res.redirect('/')
-
-})
-
-app.get('/greeted',function(req,res){
-    res.render('greeted',{actions:setFact.nameList()})
-    console.log(setFact.output())
-})
 
 
+app.get('/', routingFact.indexs)
 
-var PORT = process.env.PORT || 3000
+app.post('/greet', routingFact.postData)
+
+app.get('/greeted',routingFact.getAction)
+
+
+var PORT = process.env.PORT || 5006
 
 app.listen(PORT, function () {
     console.log('server', PORT)

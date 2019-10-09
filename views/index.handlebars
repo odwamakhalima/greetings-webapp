@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,18 +11,22 @@
 
 <body>
   <header>
-    <img src="tenor.gif" class="center">
+
+    {{!-- <img src="tenor.gif" class="center"> --}}
   </header>
   <div class="container">
     <div class="center">
-       <form action="/greet" method="POST">
-      <div class="col-12" style="width:200px;">
-        <h3>Enter Name Below: </h3><input type="string" onfocus="this.value=''" name="namesUpdate" value=""
-          placeholder="Enter A Name">
-      </div>
-      <div class="">
-        <div class="col-12" style="width:250px;">
-          <h3 style="margin-top:0px;">Choose A Language</h3>
+      <form action="/greet" method="POST">
+        <div class="col-12" style="width:200px;">
+          <div class="error">
+            {{messages.error}}
+          </div>
+          <h3>Enter Name Below: </h3><input type="string" onfocus="this.value=''" name="namesUpdate" value=""
+            placeholder="Enter A Name">
+        </div>
+        <div class="">
+          <div class="col-12" style="width:250px;">
+            <h3 style="margin-top:0px;">Choose A Language</h3>
             <label class="">
               <input id="radio" type="radio" name="langItemType" class="langItemTypeRadio" value="Xhosa">
               <span class="label-body">Xhosa</span>
@@ -38,19 +43,20 @@
               <button class="button-primary greetBtn" on type="submit" name="button" id="button"
                 style="width:30%;text-align: left;">Greet</button>
             </div>
-          </form>
+      </form>
 
-        </div>
-
-        <div class="row" style="padding:10px;">
-          <strong></strong>
-         <a href="/greeted">Greet:</a> <span class="final"> <span class="greetFinal">{{greet}}</span></span>
-        </div>
-        <div class="row" style="padding:10px;">
-          <span id="greet">People Greeted: <span class="greetingsCounter">{{counting}}</span></span>
-        </div>
-      </div>
     </div>
+
+    <div class="row" style="padding:10px;">
+      <strong></strong>
+      <a href="/greeted">Greet:</a> <span class="final"> <span class="greetFinal">{{greet}}</span></span>
+    </div>
+    <div class="row" style="padding:10px;">
+      <span id="greet">People Greeted: <span class="greetingsCounter">{{counting}}</span></span>
+    </div>
+
+  </div>
+  </div>
   </div>
 </body>
 
