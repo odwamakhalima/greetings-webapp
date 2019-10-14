@@ -1,6 +1,6 @@
 module.exports = function greetings(storeNames) {
 
-    var counter = 0
+    var counter;
     var regex = /(\+|\-)?[0-9!@#$%^&*();,.?" ^$:^\d+=/${/'}`''"\[.*?\]|<>]/i
     var namesGreeted = storeNames || {};
     var myNames;
@@ -9,7 +9,16 @@ module.exports = function greetings(storeNames) {
     var list = []
     var newList = []
     var errorM = ''
-    var countr = 0;
+    var known;
+
+
+    const connectionString = 'postgresql://codex:codex123@localhost/greetnames';
+    const pg = require("pg");
+    const Pool = pg.Pool;
+
+    const pool = new Pool({
+        connectionString
+    });
 
     function addNames(type) {
         var myTest = regex.test(type)
@@ -17,23 +26,23 @@ module.exports = function greetings(storeNames) {
             myNames = type.trim();
             myNames = myNames.toUpperCase()
         }
-        else {
-            errorM = 'Not A Valid Name Try Again'
-        }
+
         return true
     }
 
-    function count() {
-        var myKey = Object.keys(namesGreeted)
-        counter = myKey.length
-        return counter
+    async function count() {
+        var counter = await pool.query('select count(*) from allnames')
+        for(var i = 0;i<counter.rows.length;i++){
+            var checkCount = counter.rows[i]
+        }
+        return checkCount.count
     }
 
     function output() {
         return namesGreeted
     }
 
-    function greetName(language) {
+    async function greetName(language) {
         var languageType = language
         var English = 'Hello '
         var Xhosa = 'Molo '
@@ -42,24 +51,32 @@ module.exports = function greetings(storeNames) {
 
         if (myTest === false) {
             if (languageType === 'Xhosa') {
-                result = Xhosa + myNames
+                if(myNames.length>0){
+            result = Xhosa + myNames
+                }
+                
             }
             else if (languageType === 'English') {
+                if(myNames.length>0){
                 result = English + myNames
+                }
             }
             else if (languageType === 'Afrikaans') {
+                if(myNames.length>0){
                 result = Afrikaans + myNames
             }
         }
-        else {
-            errorM = 'Please Select A Language'
         }
+
         return result;
     }
-    
-    function storedNames(names) {
+
+    async function storedNames(names) {
         myNames = names
         var myTest = regex.test(myNames)
+
+        known = await pool.query('select distinct greet_name, greet_count from allnames ORDER BY greet_name')
+
         if (myTest === false) {
             newList.push(myNames)
             if (myNames.trim()) {
@@ -74,12 +91,28 @@ module.exports = function greetings(storeNames) {
                     if (check === false) {
                         if (namesGreeted[myNames] === undefined) {
                             namesGreeted[myNames] = 0;
+                            
+                            var store = await pool.query('select * from allnames WHERE greet_name = $1',[myNames])
+
+                            if(store.rowCount === 1){
+                                await pool.query('UPDATE allnames SET greet_count = greet_count + 1 WHERE greet_name = $1',[myNames])
+                            }
+                            else{
+                                await pool.query('insert into allnames (greet_name, greet_count) values ($1, $2)' , [myNames, 1]);
+                            }
                             count()
                         }
                     }
                 }
             }
-        }
+        }   
+    }
+    function getData(){
+        return known.rows
+    }
+
+   async function resetDb(){
+        await pool.query('DELETE from allnames')
     }
 
     function nameList() {
@@ -104,17 +137,6 @@ module.exports = function greetings(storeNames) {
         return newList
     }
 
-
-    function getCount(newList, value) {
-        console.log(newList)
-        countr = 0;
-        newList.forEach((v) => (v === value && countr++));
-        list.push({
-            allNames: myNames,
-            counts: countr
-        })
-        return countr;
-    }
     return {
         addNames,
         storedNames,
@@ -125,6 +147,7 @@ module.exports = function greetings(storeNames) {
         nameList,
         errors,
         storeAllName,
-        getCount
+        getData,
+        resetDb
     }
 }

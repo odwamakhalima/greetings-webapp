@@ -1,41 +1,92 @@
-let assert = require("assert");
+const assert = require('assert');
 var greetings = require('../greetFact')
+const pg = require("pg");
+const Pool = pg.Pool;
 
-describe('Greeting-App function', function () {
+// we are using a special test database for the tests
+const connectionString = 'postgresql://codex:codex123@localhost/greetnames';
 
-    it('should return the list of all the names greeted', function () {
+const pool = new Pool({
+    connectionString
+});
 
-        var setFact = greetings()
+describe('The basic database web app', function(){
 
-        setFact.storedNames('odwa')
-        setFact.storedNames('jesse')
-        setFact.storedNames('jason')
-
-        assert.deepEqual(['odwa','jesse','jason'], setFact.storeAllName());
+    beforeEach(async function(){
+        // clean the tables before each test run
+        await pool.query("delete from allnames;");
     });
 
-
-    it('should return the number of names and ignore duplicates', function () {
-
-        var setFact = greetings()
-
-        setFact.storedNames('odwa')
-        setFact.storedNames('odwa')
-        setFact.storedNames('jesse')
-        setFact.storedNames('jesse')
-
-        assert.deepEqual(2, setFact.count());
-    });
-
-    it('should greet the name in xhosa,english and afrikaans', function () {
-
-        var setFact = greetings()
-
-        setFact.storedNames('odwa')
+    it('should return the number of names greeted', async function(){
         
+        // the Factory Function is called CategoryService
+        var setGreetings = greetings(pool);
+        await setGreetings.storedNames("odwa");
+        await setGreetings.storedNames("jesse");
 
-        assert.deepEqual('Molo ODWA', setFact.greetName('Xhosa'));
-        assert.deepEqual('Hello ODWA', setFact.greetName('English'));
-        assert.deepEqual('Hallo ODWA', setFact.greetName('Afrikaans'));
+        
+        assert.equal(2, await setGreetings.count());
+
     });
+    
+
+    it('should return the number of names greeted and ignore duplicates', async function(){
+        
+        // the Factory Function is called CategoryService
+        var setGreetings = greetings(pool);
+        await setGreetings.storedNames("odwa");
+        await setGreetings.storedNames("odwa");
+        await setGreetings.storedNames("jesse");
+        await setGreetings.storedNames("jesse");
+        await setGreetings.storedNames("jason");
+
+        
+        assert.equal(1, await setGreetings.count());
+
+    });
+
+    it('should greet the name with the selected language', async function(){
+        
+        // the Factory Function is called CategoryService
+        var setGreetings = greetings(pool);
+        await setGreetings.storedNames("odwa");
+
+        
+        assert.equal('Molo ODWA', await setGreetings.greetName('Xhosa'));
+
+    });
+
+    it('should greet the name with the selected language and ignore duplicates', async function(){
+        
+        // the Factory Function is called CategoryService
+        var setGreetings = greetings(pool);
+        await setGreetings.storedNames("odwa");
+        await setGreetings.storedNames("odwa");
+
+
+        
+        assert.equal('Hello ODWA', await setGreetings.greetName('English'));
+      
+    });
+
+
+    it('should return 0 because the database is reseted', async function(){
+        
+        // the Factory Function is called CategoryService
+        var setGreetings = greetings(pool);
+        await setGreetings.storedNames("odwa");
+        await setGreetings.storedNames("jesse");
+        await setGreetings.storedNames("jason");
+        await setGreetings.storedNames("siwe");
+
+        await setGreetings.resetDb()
+
+    
+        assert.equal(0, await setGreetings.count());
+
+    });
+
+    after(function(){
+        pool.end();
+    })
 });

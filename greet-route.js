@@ -1,41 +1,45 @@
-module.exports = function greetRoute(setFact){
+module.exports = function greetRoute(setFact) {
+
+    async function indexs(req, res) {
 
 
-
-
-    
-    function indexs(req,res){
         res.render('index', {
-            counting: setFact.count(),
+            counting: await setFact.count(),
             greet: setFact.displayer(req.body.langItemType)
         })
-       
     }
 
-    function postData(req,res){
+    async function postData(req, res) {
+        await setFact.storedNames(req.body.namesUpdate);
 
-   setFact.storedNames(req.body.namesUpdate);
-   setFact.greetName(req.body.langItemType)
+        var name = req.body.namesUpdate
 
-        let name = req.body.namesUpdate
-        let lang = req.body.langItemType
- 
-        console.log(setFact.getCount(setFact.storeAllName(),name))
-        if(name.length<=0){
-        req.flash('error', 'Please Enter A Name Below')
+        if (req.body.button2 === 'button2') {
+            await setFact.resetDb()
         }
-  
-    res.redirect('/')
+
+
+        await setFact.greetName(req.body.langItemType)
+        await setFact.count()
+
+
+
+        if (name.length <= 0) {
+            req.flash('error', 'Please Enter A Name Below')
+        }
+
+        res.redirect('/')
 
     }
 
-    function getAction(req,res){
-        res.render('greeted',{actions:setFact.nameList()})
+    function getAction(req, res) {
+        res.render('greeted', { actions: setFact.getData() })
     }
-    return{
+
+    return {
         indexs,
         postData,
-        getAction
+        getAction,
     }
 
 }
