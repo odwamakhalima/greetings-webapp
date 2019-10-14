@@ -42,7 +42,7 @@ module.exports = function greetings(storeNames) {
         return namesGreeted
     }
 
-    async function greetName(language) {
+    function greetName(language) {
         var languageType = language
         var English = 'Hello '
         var Xhosa = 'Molo '
@@ -107,6 +107,7 @@ module.exports = function greetings(storeNames) {
             }
         }   
     }
+
     function getData(){
         return known.rows
     }
