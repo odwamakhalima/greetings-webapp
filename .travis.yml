@@ -6,5 +6,5 @@ services:
 env:
   -DATABASE_URL ='postgresql://postgresql@localhost:5432/greetnames'
 before_script:
-- psql -c 'CREATE DATABASE greetnames;' -U postgres
-- psql -u postgres -d greetnames -a -f base.sql
+  -psql -c 'CREATE DATABASE greetnames;' -U postgres
+  -psql -U postgres -d greetnames -a -f base.sql
