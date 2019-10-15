@@ -4,7 +4,7 @@ node_js:
 services:
   -postgresql
 env:
-  -DATABASE_URL ='postgresql://postgresql@localhost/greetnames'
+  -DATABASE_URL ='postgresql://postgresql@localhost:5432/greetnames'
 before_script:
-- psql -c 'CREATE DATABASE greetnames;'
-- psql -u postgres -d greetnames -a -f table.sql
+- psql -c 'CREATE DATABASE greetnames;' -u postgres
+- psql -u postgres -d greetnames -a -f base.sql
