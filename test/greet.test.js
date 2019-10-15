@@ -3,8 +3,7 @@ var greetings = require('../greetFact')
 const pg = require("pg");
 const Pool = pg.Pool;
 
-// we are using a special test database for the tests
-const connectionString = 'postgresql://codex:codex123@localhost/greetnames';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:codex123@localhost/greetnames';
 
 const pool = new Pool({
     connectionString
@@ -13,13 +12,13 @@ const pool = new Pool({
 describe('The basic database web app', function(){
 
     beforeEach(async function(){
-        // clean the tables before each test run
+        
         await pool.query("delete from allnames;");
     });
 
     it('should return the number of names greeted', async function(){
         
-        // the Factory Function is called CategoryService
+        
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("jesse");
@@ -32,7 +31,6 @@ describe('The basic database web app', function(){
 
     it('should return the number of names greeted and ignore duplicates', async function(){
         
-        // the Factory Function is called CategoryService
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("odwa");
@@ -47,7 +45,6 @@ describe('The basic database web app', function(){
 
     it('should greet the name with the selected language', async function(){
         
-        // the Factory Function is called CategoryService
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
 
@@ -58,7 +55,7 @@ describe('The basic database web app', function(){
 
     it('should greet the name with the selected language and ignore duplicates', async function(){
         
-        // the Factory Function is called CategoryService
+       
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("odwa");
@@ -72,7 +69,7 @@ describe('The basic database web app', function(){
 
     it('should return 0 because the database is reseted', async function(){
         
-        // the Factory Function is called CategoryService
+        
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("jesse");
