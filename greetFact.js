@@ -76,10 +76,10 @@ module.exports = function greetings(storeNames) {
         var myTest = regex.test(myNames)
 
         known = await pool.query('select distinct greet_name, greet_count from allnames ORDER BY greet_name')
-
+        if(myNames.length>0){
         if (myTest === false) {
             newList.push(myNames)
-            if (myNames.trim()) {
+            
                 if (addNames(myNames)) {
                     var allData = []
                     allData = Object.keys(namesGreeted)
@@ -102,13 +102,14 @@ module.exports = function greetings(storeNames) {
                             }
                             count()
                         }
-                    }
                 }
             }
         }   
     }
+}
 
     function getData(){
+        storedNames(myNames)
         return known.rows
     }
 
