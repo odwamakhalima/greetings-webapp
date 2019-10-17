@@ -2,10 +2,9 @@ module.exports = function greetRoute(setFact) {
 
     async function indexs(req, res) {
 
-
         res.render('index', {
             counting: await setFact.count(),
-            greet: setFact.displayer(req.body.langItemType)
+            greet: await setFact.displayer(req.body.langItemType)
         })
     }
 
@@ -18,11 +17,7 @@ module.exports = function greetRoute(setFact) {
             await setFact.resetDb()
         }
 
-
         await setFact.greetName(req.body.langItemType)
-        await setFact.count()
-
-
 
         if (name.length <= 0) {
             req.flash('error', 'Please Enter A Name Below')
@@ -32,8 +27,8 @@ module.exports = function greetRoute(setFact) {
 
     }
 
-    function getAction(req, res) {
-        res.render('greeted', { actions: setFact.getData() })
+    async function getAction(req, res) {
+        res.render('greeted', { actions: await setFact.getData() })
     }
 
     return {

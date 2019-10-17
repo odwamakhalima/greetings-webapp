@@ -10,9 +10,7 @@ const pool = new Pool({
 });
 
 describe('The basic database web app', function(){
-
     beforeEach(async function(){
-        
         await pool.query("delete from allnames;");
     });
 
@@ -22,13 +20,10 @@ describe('The basic database web app', function(){
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("jesse");
-
-        
         assert.equal(2, await setGreetings.count());
 
     });
     
-
     it('should return the number of names greeted and ignore duplicates', async function(){
         
         var setGreetings = greetings(pool);
@@ -38,8 +33,7 @@ describe('The basic database web app', function(){
         await setGreetings.storedNames("jesse");
         await setGreetings.storedNames("jason");
 
-        
-        assert.equal(1, await setGreetings.count());
+        assert.equal(3, await setGreetings.count());
 
     });
 
@@ -49,7 +43,7 @@ describe('The basic database web app', function(){
         await setGreetings.storedNames("odwa");
 
         
-        assert.equal('Molo ODWA', await setGreetings.greetName('Xhosa'));
+        assert.equal('Molo Odwa', await setGreetings.greetName('Xhosa'));
 
     });
 
@@ -59,17 +53,13 @@ describe('The basic database web app', function(){
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("odwa");
-
-
-        
-        assert.equal('Hello ODWA', await setGreetings.greetName('English'));
+ 
+        assert.equal('Hello Odwa', await setGreetings.greetName('English'));
       
     });
 
-
     it('should return 0 because the database is reseted', async function(){
-        
-        
+
         var setGreetings = greetings(pool);
         await setGreetings.storedNames("odwa");
         await setGreetings.storedNames("jesse");

@@ -40,7 +40,7 @@ app.post('/greet', routingFact.postData)
 app.get('/greeted', routingFact.getAction)
 
 
-var PORT = process.env.PORT || 5010
+var PORT = process.env.PORT || 5008
 
 app.listen(PORT, function () {
   console.log('server', PORT)
