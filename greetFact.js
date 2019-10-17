@@ -1,7 +1,7 @@
-module.exports = function greetings(storeNames) {
+module.exports = function greetings(pool) {
 
     var regex = /(\+|\-)?[0-9!@#$%^&*();,.?" ^$:^\d+=/${/'}`''"\[.*?\]|<>]/i
-    var namesGreeted = storeNames || {};
+    var namesGreeted = {};
     var myNames;
     var check = false
     var result;
@@ -9,15 +9,6 @@ module.exports = function greetings(storeNames) {
     var newList = []
     var errorM = ''
     var known;
-
-
-    const connectionString = 'postgresql://codex:codex123@localhost/greetnames';
-    const pg = require("pg");
-    const Pool = pg.Pool;
-
-    const pool = new Pool({
-        connectionString
-    });
 
 
     async function count() {
