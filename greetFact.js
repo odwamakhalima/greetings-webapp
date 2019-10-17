@@ -10,7 +10,6 @@ module.exports = function greetings(pool) {
     var errorM = ''
     var known;
 
-
     async function count() {
         var counter = await pool.query('select count(*) from allnames')
         for (var i = 0; i < counter.rows.length; i++) {

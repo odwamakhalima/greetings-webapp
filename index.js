@@ -7,8 +7,18 @@ var bodyParser = require('body-parser')
 var greetings = require('./greetFact')
 var routings = require('./greet-route')
 
-const setFact = greetings()
+const pg = require("pg");
+const Pool = pg.Pool;
+
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:codex123@localhost/greetnames';
+
+const pool = new Pool({
+    connectionString
+});
+const setFact = greetings(pool)
 const routingFact = routings(setFact)
+
+
 const exphbs = require('express-handlebars');
 
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
