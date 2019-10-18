@@ -15,6 +15,8 @@ module.exports = function greetings(pool) {
         for (var i = 0; i < counter.rows.length; i++) {
             var checkCount = counter.rows[i]
         }
+        //console.log(checkCount.count);
+        
         return checkCount.count
     }
 
@@ -60,7 +62,8 @@ module.exports = function greetings(pool) {
 
             if (myNames.length > 0) {
                 var store = await pool.query('select * from allnames WHERE greet_name = $1', [myNames])
-
+                    
+                    
                 if (store.rowCount === 1) {
                     await pool.query('UPDATE allnames greet_name SET greet_count = greet_count + 1 WHERE greet_name = $1', [myNames])
                 }
