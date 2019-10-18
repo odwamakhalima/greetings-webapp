@@ -23,6 +23,10 @@ module.exports = function greetRoute(setFact) {
             req.flash('error', 'Please Enter A Name Below')
         }
 
+        if(req.body.langItemType == undefined){
+            req.flash('error', 'Please Select A Language')
+        }
+
         res.redirect('/')
 
     }
