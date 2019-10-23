@@ -1,5 +1,7 @@
 module.exports = function greetRoute(setFact) {
 
+    var regex = /(\+|\-)?[0-9!@#$%^&*();,.?" ^$:^\d+=/${/'}`''"\[.*?\]|<>]/i
+
     async function indexs(req, res) {
 
         res.render('index', {
@@ -25,6 +27,12 @@ module.exports = function greetRoute(setFact) {
 
         if(req.body.langItemType == undefined){
             req.flash('error', 'Please Select A Language')
+        }
+
+        var myTest = regex.test(name)
+
+        if (myTest === true) {
+            req.flash('error', 'Please Enter A Valid Name')
         }
 
         res.redirect('/')
