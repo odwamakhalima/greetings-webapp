@@ -49,6 +49,10 @@ app.post('/greet', routingFact.postData)
 
 app.get('/greeted', routingFact.getAction)
 
+app.post('/back',function(req,res){
+  res.redirect('/')
+})
+
 
 var PORT = process.env.PORT || 5009
 
